@@ -34,7 +34,7 @@ body {
 }
 
 body, input, textarea, button {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
     line-height: 140%;
     font-weight: 400;
     font-size: 0.875rem;

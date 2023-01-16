@@ -1,20 +1,48 @@
+import { FormEvent, useState } from 'react';
 import styles from './App.module.css';
+import { Counter } from './components/Counter';
 import { CreateButton } from './components/CreateButton';
 import { Header } from './components/Header';
 import { TextInput } from './components/TextInput';
 import './global.css';
+import clipboardImg from './assets/clipboard.svg';
 
 export function App() {
+
+  function handleCreateNewTask(event: FormEvent): void {
+    event.preventDefault();
+  }
+
+  const [hasTask, setHasTask] = useState<boolean>(false);
+
   return (
     <div className={styles.app}>
       <Header />
       <div className={styles.wrapper}>
         <main>
-          <div className={styles.addTask}>
+          <form onSubmit={handleCreateNewTask}>
             <TextInput />
             <CreateButton />
+          </form>
+          <div className={styles.tasksContainer}>
+            <header>
+              <Counter text="Tarefas criadas" counter="0" strongColor='blue' />
+              <Counter text="Concluidas" counter="0" strongColor='purple'/>
+            </header>
+            <main>
+              {!hasTask ? (
+                <div className={styles.noTask}>
+                  <img src={clipboardImg}  />
+                  <span><strong>Você ainda não tem tarefas cadastradas</strong> <br />
+                  Crie tarefas e organize seus itens a fazer</span>
+                </div>
+              ): (
+                <div>
+
+                </div>
+              ) }
+            </main>
           </div>
-          
         </main>
       </div>
     </div>
