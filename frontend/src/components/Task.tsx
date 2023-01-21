@@ -5,19 +5,24 @@ interface TaskProps {
     id: number;
     text: string;
     onDelete: (id: number) => void;
+    onChecked: (id: number, isChecked: boolean) => void;
 }
 
 export function Task(props: TaskProps) {
-    const { text, onDelete, id } = props;
+    const { id, text, onDelete, onChecked } = props;
 
     function handleDeleteTask() {
         onDelete(id);
     }
 
+    function handleTaskChecked(event: any) {
+        onChecked(id, event?.target.checked);
+    }
+
     return (
         <div className={styles.container}>
             <label>
-                <input type="checkbox" />
+                <input onChange={handleTaskChecked} type="checkbox" />
                 <span className={styles.checkbox} />
                 <span>{text}</span>
             </label>

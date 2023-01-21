@@ -7,6 +7,7 @@ import './global.css';
 import clipboardImg from './assets/clipboard.svg';
 import { Task } from './components/Task';
 import { ITask } from './interfaces/ITask';
+import { arrayMoveImmutable } from 'array-move';
 
 
 export function App() {
@@ -16,7 +17,9 @@ export function App() {
   const [newTask, setNewTask] = useState('');
   const hasTask = tasks?.length !== 0;
   const isInputEmpty = newTask.length === 0;
-  const [totalTaskCompleted, setTaskCompleted] = useState(0);
+  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
+  const totalTasksCompleted = completedTasks.length;
+
 
   function handleCreateNewTask(event: FormEvent): void {
     event.preventDefault();
@@ -33,8 +36,26 @@ export function App() {
   }
 
   function handleDeleteTask(taskId: number): void {
-    const newTaskList = tasks?.filter(task => task.id !== taskId);
-    setTasks(newTaskList);
+    const newTasksList = tasks.filter(task => task.id !== taskId);
+    const newCompleted = completedTasks.filter(id => id !== taskId);
+    setTasks(newTasksList);
+    setCompletedTasks(newCompleted);
+  }
+
+  function handleCheckedTask(taskId: number, isChecked: boolean): void {
+    const getAllIds = tasks.map( task => task.id);
+    const indexOfElement = getAllIds.lastIndexOf(taskId);
+    if(isChecked){
+      setCompletedTasks([ ...completedTasks, taskId]);
+      const newList = arrayMoveImmutable(tasks, indexOfElement, tasks.length-1);
+      setTasks(newList);
+    }
+    else {
+      const newCompleted = completedTasks.filter(id => id !== taskId);
+      setCompletedTasks(newCompleted);
+      const newList = arrayMoveImmutable(tasks, indexOfElement, 0);
+      setTasks(newList);
+    }
   }
 
   return (
@@ -59,7 +80,7 @@ export function App() {
                 counter={totalTasks.toString()} 
                 strongColor='blue' 
               />
-              <Counter text="Concluidas" counter={`${totalTasks} de ${totalTasks}`} strongColor='purple'/>
+              <Counter text="Concluidas" counter={`${totalTasksCompleted} de ${totalTasks}`} strongColor='purple'/>
             </header>
             <main>
               {!hasTask ? (
@@ -77,6 +98,7 @@ export function App() {
                         id={task.id} 
                         text={task.content} 
                         onDelete={handleDeleteTask}
+                        onChecked={handleCheckedTask}
                       />
                     )
                   })}
