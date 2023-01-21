@@ -8,6 +8,7 @@ import clipboardImg from './assets/clipboard.svg';
 import { Task } from './components/Task';
 import { ITask } from './interfaces/ITask';
 import { arrayMoveImmutable } from 'array-move';
+import nextId from 'react-id-generator';
 
 
 export function App() {
@@ -19,6 +20,15 @@ export function App() {
   const isInputEmpty = newTask.length === 0;
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
   const totalTasksCompleted = completedTasks.length;
+  const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    if(toggle) {
+      const taskOrder = arrayMoveImmutable(tasks, tasks.length-1, 0);
+      setTasks(taskOrder);
+      setToggle(false);
+    }
+  }, [toggle]);
 
 
   function handleCreateNewTask(event: FormEvent): void {
@@ -26,9 +36,10 @@ export function App() {
     setTasks([ ...tasks, 
     {
       content: newTask,
-      id: tasks.length !== 0 ? tasks[tasks.length - 1].id+1 : 1
+      id: +nextId().replace("id", "")
     }])
     setNewTask('');
+    setToggle(true);
   }
 
   function handleNewTask(event: ChangeEvent<HTMLInputElement>) {
