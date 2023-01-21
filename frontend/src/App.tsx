@@ -6,14 +6,18 @@ import { Header } from './components/Header';
 import { TextInput } from './components/TextInput';
 import './global.css';
 import clipboardImg from './assets/clipboard.svg';
+import { Task } from './components/Task';
+
 
 export function App() {
+
+  const tasks = [];
 
   function handleCreateNewTask(event: FormEvent): void {
     event.preventDefault();
   }
 
-  const [hasTask, setHasTask] = useState<boolean>(false);
+  const [hasTask, setHasTask] = useState<boolean>(true);
 
   return (
     <div className={styles.app}>
@@ -37,8 +41,9 @@ export function App() {
                   Crie tarefas e organize seus itens a fazer</span>
                 </div>
               ): (
-                <div>
-
+                <div className={styles.hasTask}>
+                  <Task />
+                  <Task />
                 </div>
               ) }
             </main>
